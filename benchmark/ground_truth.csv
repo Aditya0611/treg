@@ -1,0 +1,31 @@
+domain,canonical_domain,name,linkedin,employees_min,employees_max,city,state,country,industry,is_for_profit,case,verified,notes
+ciscom.com,,CisCom Solutions,,,,,,,information technology,yes,normal,,fill LinkedIn URL + headcount from the LinkedIn page and HQ from the website footer; do not copy from treg sheets
+isoc.net,,ISOCNET,,,,,,,information technology,yes,normal,,same as above
+awecomm.com,,Awecomm,,,,,,,information technology,yes,normal,,
+mapolce.com,,M.A. Polce,,,,,,,information technology,yes,normal,,
+simplehelix.com,,Simple Helix,,,,,,,information technology,yes,normal,,
+prescriptive.solutions,,Prescriptive Data Solutions,,,,,,,information technology,yes,normal,,
+reportsnow.com,,ReportsNow,,,,,,,software,yes,normal,,
+dataedo.com,,Dataedo,,,,,,,software,yes,normal,,check HQ: US office vs Poland
+racktopsystems.com,,RackTop Systems,,,,,,,software,yes,normal,,
+tularosa.net,,Tularosa Communications,,,,,,,telecom,yes,normal,,ISP
+up.codes,,UpCodes,,,,,,,software,yes,normal,,
+rebilly.com,,Rebilly,,,,,,,software,yes,normal,,
+intempt.com,,Intempt,,,,,,,software,yes,normal,,
+timetopet.com,,Time To Pet,,,,,,,software,yes,normal,,
+hopstack.io,,Hopstack,,,,,,,software,yes,normal,,
+radersolutions.com,,RADER Solutions,,,,,,,information technology,yes,near_size_edge,,treg sheets said 52 employees; confirm on LinkedIn
+cavanaughconsulting.org,,Cavanaugh Consulting,,,,,,,,,near_size_edge,,treg sheets said 9 employees; .org - confirm for-profit and industry
+windows.com,microsoft.com,Microsoft,https://www.linkedin.com/company/microsoft,100000,,Redmond,Washington,United States,software,yes,generic_domain,,windows.com is Microsoft's domain: returning Microsoft is correct; a small "Windows" company is wrong
+apex.com,,,,,,,,,,,generic_domain,,treg-24 kept it as Apex (Redding CA 36 employees) - check who really owns apex.com
+hq.com,,,,,,,,,,,generic_domain,,check who owns hq.com
+computer.net,,,,,,,,,,,generic_domain,,treg-24 needs-review row - check by hand
+facebook.com,meta.com,Meta,https://www.linkedin.com/company/meta,30000,,Menlo Park,California,United States,software,yes,rebrand,,either facebook.com or meta.com counts as the right company
+twitter.com,x.com,X,,,,,,,,yes,rebrand,,fill LinkedIn and HQ by hand (HQ moved in 2024)
+statuspage.io,atlassian.com,Atlassian,https://www.linkedin.com/company/atlassian,5000,,,,,software,yes,subsidiary,,Statuspage is an Atlassian product; HQ is ambiguous (Sydney vs San Francisco) - fill from LinkedIn
+slack.com,,Slack,,1000,,San Francisco,California,United States,software,yes,subsidiary,,owned by Salesforce but keeps its own identity: salesforce.com is a wrong answer; fill LinkedIn by hand
+spotify.com,,Spotify,https://www.linkedin.com/company/spotify,5000,,Stockholm,,Sweden,,yes,foreign_with_us_office,,large US offices; HQ is Sweden
+canva.com,,Canva,https://www.linkedin.com/company/canva,1000,,Sydney,,Australia,software,yes,foreign_with_us_office,,US office in San Francisco; HQ is Australia
+transalis.com,,Transalis,,,,,,United Kingdom,software,yes,foreign_small,,
+nitrd.gov,,NITRD,,,,,,United States,government,no,government,,federal program office
+orionlibrary.org,,Orion Township Public Library,,,,,Michigan,United States,library,no,library,,

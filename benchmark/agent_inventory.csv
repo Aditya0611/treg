@@ -1,0 +1,47 @@
+agent,input,gives,usd_per_call,treg_hit_rate,tested_before,group
+crustdata.companies.identify,domain,"name, LinkedIn, employee band",0,,yes,domain to company
+crawl4ai.companies.enrich,domain,"name, employees, location, description",0.0005,70.7%,yes,domain to company
+dropleads.companies.enrich,domain,"name, LinkedIn, employees, location, phone",0.0018,36%,yes,domain to company
+thecompaniesapi.companies.enrich,domain,"name, LinkedIn, employees, location",0.0019,63.1%,yes,domain to company
+hunter.companies.enrich,domain,"name, LinkedIn, employee band, location",0.0049,72%,yes,domain to company
+leadocean.companies.enrich,domain,"location",0.005,59.4%,yes,domain to company
+tomba.companies.enrich,domain,"name, LinkedIn, employee band, location",0.0089,21.1%,yes,domain to company
+companyenrich.companies.enrich,domain,"name, LinkedIn, employees, location",0.0098,89.4%,yes,domain to company
+oceanio.companies.enrich,domain,"name, LinkedIn, employees, location",0.0081,,no,domain to company
+openmart.companies.enrich,domain,"name, employees, location",0.00894,,no,domain to company
+limadata.companies.enrich,domain,"name, LinkedIn, employees, location",0.02,100%,no,domain to company
+contactout.companies.enrich,domain,"name, LinkedIn, employees, location",0.02,32.2%,no,domain to company
+village.companies.enrich,domain,"name, LinkedIn, employees",0.02,,no,domain to company
+prospeo.companies.enrich,domain,"name, LinkedIn, employees, location",0.0245,100%,no,domain to company
+leadmagic.companies.enrich,domain,"name, LinkedIn, employees, location",0.025,39.5%,no,domain to company
+branddev.brand.retrieve,domain,"name, socials, headcount, address",0.0253,100%,no,domain to company
+apollo.companies.enrich,domain,"name, LinkedIn, employees, location",0.026,88.2%,no,domain to company
+diffbot.companies.enrich,domain,"name, LinkedIn, employees, location",0.0299,,no,domain to company
+sumble.organizations,domain,"name, LinkedIn, employees",0.03,57.2%,no,domain to company
+fiber-ai.companies.enrich,domain,"name, LinkedIn, employees, location",0.04,91.1%,no,domain to company
+predictleads.companies.enrich,domain,"name, LinkedIn, employees, location",0.04,96.4%,no,domain to company
+wiza.companies.enrich,domain,"name, LinkedIn, employees, location",0.05,100%,no,domain to company
+pdl.companies.enrich,domain,"name, LinkedIn, exact employees, location",0.10,100%,no,domain to company
+aviato.companies.enrich,domain,"name, LinkedIn, employees, location",0.15,69.5%,no,domain to company
+lusha.companies.enrich,domain,"name, LinkedIn, employees, location",0.25,81.3%,no,domain to company
+findymail.search.company,domain,"name, LinkedIn",0.0198,17.9%,no,domain to company (low hit)
+orbisearch.companies.enrich,domain,"name, LinkedIn",0.0062,5.6%,no,domain to company (low hit)
+blitzapi.companies.domain-to-linkedin,domain,LinkedIn URL,0.000495,,yes (provider limit reached),domain to LinkedIn
+icypeas.companies.profile.url,domain or name,LinkedIn URL,0.019,,no,domain to LinkedIn
+limadata.companies.linkedin.find,domain,LinkedIn URL,0.02,,no,domain to LinkedIn
+crawl4ai.linkedin.company.profile,LinkedIn URL,"size band, HQ, website, industry",0.0009,,used as check only,LinkedIn page reader
+tikhub.x.linkedin-web-v2-get-company-profile,LinkedIn URL,"size band, HQ, website",0.001,86.7%,no,LinkedIn page reader
+fetchinio.linkedin.company.profile,LinkedIn URL,"size band, HQ, website",0.0015,92.2%,no,LinkedIn page reader
+brightdata.x.linkedin-company-info,LinkedIn URL,"size band, HQ, website",0.0015,,no,LinkedIn page reader
+scrapecreators.x.v1-linkedin-company,LinkedIn URL,"headcount, HQ, website, industry",0.00188,100%,no,LinkedIn page reader
+anyapi.linkedin.company,LinkedIn URL,"size band, HQ, website",0.00253,,no,LinkedIn page reader
+harvestapi.linkedin.company.profile,LinkedIn handle,"size band, exact headcount, HQ, website",0.004,87.8%,no,LinkedIn page reader
+blitzapi.companies.enrich,LinkedIn URL,"employees, HQ, website",0.000495,96.3%,no (provider limit reached),LinkedIn page reader
+icypeas.companies.enrich,LinkedIn URL,"headcount, growth, HQ",0.0095,79%,no,LinkedIn page reader
+companyenrich.companies.enrich.by_properties,LinkedIn URL,"employees, location",0.0098,95.1%,no,LinkedIn page reader
+fiber-ai.linkedin.company.profile,LinkedIn handle,"live headcount, history, HQ",0.04,100%,no,LinkedIn page reader
+enrichlayer.company.profile,LinkedIn URL,"size band, HQ, website",0.10,100%,no,LinkedIn page reader
+enrichlayer.company.employees.count,LinkedIn URL,exact employee count,0.10,,no,LinkedIn page reader
+corpoapi.companies.registry.search,company name,official register match,0,,no,official register
+corpoapi.companies.verify,company name + country,"legal name, status, registered address",0.05,,no,official register
+corpoapi.companies.registry.profile,register id,"legal name, registered address, officers",0.05,,no,official register

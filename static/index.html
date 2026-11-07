@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treg company list</title>
+  <style>
+    :root {
+      --ink: #1c1915;
+      --muted: #5e584f;
+      --line: #e3d9cc;
+      --paper: #f6f1e8;
+      --card: #fffdf9;
+      --green: #0f6e56;
+      --green-dark: #0b5342;
+      --warn: #8a4b08;
+      --bad: #8d2a2a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 16px/1.45 "Segoe UI", sans-serif;
+    }
+    header, main { width: min(980px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 28px 0 8px; }
+    h1 { font: 600 34px/1.1 Palatino, "Palatino Linotype", Georgia, serif; margin: 0 0 8px; }
+    h2 { font: 600 22px/1.2 Palatino, Georgia, serif; margin: 0 0 12px; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .layout { display: grid; grid-template-columns: 210px 1fr; gap: 22px; padding: 18px 0 48px; }
+    ol.steps { list-style: none; margin: 0; padding: 0; }
+    ol.steps li { padding: 8px 0 8px 28px; position: relative; color: var(--muted); }
+    ol.steps li::before {
+      content: attr(data-n);
+      position: absolute; left: 0; top: 8px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #efe7da; color: var(--ink);
+      font-size: 12px; line-height: 20px; text-align: center;
+    }
+    ol.steps li.on { color: var(--ink); font-weight: 650; }
+    ol.steps li.on::before { background: var(--green); color: white; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    button, .file-btn {
+      appearance: none; border: 0; cursor: pointer;
+      background: var(--green); color: white;
+      border-radius: 999px; padding: 10px 16px; font: 600 15px/1 "Segoe UI", sans-serif;
+    }
+    button.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    label { display: block; font-size: 13px; font-weight: 650; margin: 10px 0 4px; }
+    input, textarea {
+      width: 100%; border: 1px solid var(--line); background: white;
+      border-radius: 10px; padding: 10px 12px; font: 15px/1.4 "Segoe UI", sans-serif; color: var(--ink);
+    }
+    input::placeholder, textarea::placeholder { color: #b3aa9e; }
+    textarea { min-height: 74px; resize: vertical; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+    .check { display: flex; gap: 8px; align-items: center; font-weight: 500; margin-top: 12px; }
+    .check input { width: auto; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 12px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); }
+    .bar { height: 8px; background: #efe7da; border-radius: 99px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: var(--green); width: 0; }
+    #log { white-space: pre-wrap; font: 13px/1.45 ui-monospace, Consolas, monospace; margin: 0; }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    .hidden { display: none; }
+    @media (max-width: 760px) {
+      .layout, .choices, .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Company list</h1>
+    <p class="muted">Describe the companies in a sentence, such as “IT companies in USA having 20 employees.” Treg searches, then the workbook keeps every field it returned. Companies and contacts are separate sheets.</p>
+  </header>
+  <main class="layout">
+    <ol class="steps">
+      <li data-n="1" id="step-1" class="on">Input</li>
+      <li data-n="2" id="step-2">Confirm filters</li>
+      <li data-n="3" id="step-3">Enrich</li>
+      <li data-n="4" id="step-4">Contacts and emails</li>
+      <li data-n="5" id="step-5">Excel</li>
+    </ol>
+    <div>
+      <section id="panel-input">
+        <div class="choices">
+          <div class="card">
+            <h2>Upload a file</h2>
+            <p class="muted">Excel or CSV, up to 1,000 companies. One column named domain, website, or company_domain. company_name is optional.</p>
+            <input id="file" type="file" accept=".csv,.xlsx,.xlsm">
+            <div class="row"><button id="upload-btn" type="button">Read file</button></div>
+            <p id="upload-error" class="bad"></p>
+          </div>
+          <div class="card">
+            <h2>Describe them</h2>
+            <p class="muted">Example: SaaS companies in Texas, 51–200 employees. Turning this into filters does not search Treg and does not spend credit.</p>
+            <textarea id="query" placeholder="SaaS companies in Texas, 51-200 employees"></textarea>
+            <div class="row"><button id="parse-btn" type="button">Turn into filters</button></div>
+            <p id="parse-error" class="bad"></p>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Treg access</h2>
+          <p class="muted" id="health">Checking whether Treg is connected…</p>
+          <div class="grid" id="token-fields">
+            <div>
+              <label for="token">Treg token</label>
+              <input id="token" type="password" autocomplete="off" placeholder="Paste a token only if this machine does not have one saved">
+            </div>
+            <div>
+              <label for="org">Org slug, if the token asks for one</label>
+              <input id="org" autocomplete="off" placeholder="Optional">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-confirm" class="hidden">
+        <div class="card">
+          <h2 id="confirm-title">Confirm</h2>
+          <p id="confirm-note" class="muted"></p>
+          <div id="file-summary" class="hidden">
+          <div id="file-table"></div>
+          <label for="file-title">Job title, optional</label>
+          <input id="file-title" placeholder="Head of Sales">
+        </div>
+          <div id="filter-fields">
+            <div class="grid">
+              <div><label for="f-industry">Industry</label><input id="f-industry"></div>
+              <div><label for="f-q">Free-text query</label><input id="f-q"></div>
+              <div><label for="f-technology">Technology</label><input id="f-technology"></div>
+              <div><label for="f-country">Country (ISO code)</label><input id="f-country" autocomplete="off"></div>
+              <div><label for="f-state">State</label><input id="f-state" autocomplete="off" placeholder="Blank for the whole country"></div>
+              <div><label for="f-city">City</label><input id="f-city" autocomplete="off"></div>
+              <div><label for="f-min">Employees min</label><input id="f-min" inputmode="numeric"></div>
+              <div><label for="f-max">Employees max</label><input id="f-max" inputmode="numeric"></div>
+              <div><label for="f-limit">Companies to fetch</label><input id="f-limit" inputmode="numeric" value="100"></div>
+              <div><label for="f-title">Job title, optional</label><input id="f-title" autocomplete="off" placeholder="Blank for any title"></div>
+            </div>
+            <p class="muted">A single headcount such as 20 is the 11–50 company-size band, because Treg stores ranges rather than an exact number. A range that starts at 50 keeps 51 and up, because 50 is the top of that band. A company is kept only when the lookup is still that same company and its real headcount is inside the band. Contacts per company set to 0 skips contacts and emails.</p>
+          </div>
+          <div class="grid">
+            <div><label for="o-contacts">Contacts per company (0 skips them, max 9)</label><input id="o-contacts" value="0" inputmode="numeric"></div>
+            <div><label for="o-budget">Stop after this much USD</label><input id="o-budget" value="25" inputmode="decimal"></div>
+            <div><label for="o-max">Max USD per Treg call</label><input id="o-max" value="0.05" inputmode="decimal"></div>
+            <div><label for="o-concurrency">Parallel companies</label><input id="o-concurrency" value="4" inputmode="numeric"></div>
+          </div>
+          <label class="check"><input id="o-verify" type="checkbox"> Verify each email in the same lookup</label>
+          <label class="check"><input id="o-phones" type="checkbox"> Look up a phone when the contact row does not already have one</label>
+          <label class="check"><input id="o-waterfall" type="checkbox" checked> If the first provider misses, try another inside the per-call cap</label>
+          <p id="estimate" class="warn"></p>
+          <p id="run-start-error" class="warn"></p>
+          <div class="row">
+            <button id="back-btn" class="secondary" type="button">Back</button>
+            <button id="run-btn" type="button">Run</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-run" class="hidden">
+        <div class="card">
+          <h2 id="run-title">Running</h2>
+          <p id="run-meta" class="muted"></p>
+          <div class="bar" aria-hidden="true"><span id="run-bar"></span></div>
+          <div class="row">
+            <button id="stop-btn" class="secondary" type="button">Stop</button>
+            <button id="download-btn" type="button" disabled>Download Excel</button>
+            <button id="again-btn" class="secondary" type="button">New list</button>
+          </div>
+          <p id="run-error" class="bad"></p>
+          <table>
+            <thead><tr><th>Domain</th><th>Name</th><th>Status</th><th>Contacts</th><th>Emails</th></tr></thead>
+            <tbody id="preview"></tbody>
+          </table>
+          <pre id="log"></pre>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const state = { mode: "", upload: null, filters: null, jobId: "", timer: 0 };
+
+    const $ = (id) => document.getElementById(id);
+
+    function show(name) {
+      $("panel-input").classList.toggle("hidden", name !== "input");
+      $("panel-confirm").classList.toggle("hidden", name !== "confirm");
+      $("panel-run").classList.toggle("hidden", name !== "run");
+      ["1", "2", "3", "4", "5"].forEach((n) => $("step-" + n).classList.remove("on"));
+      const on = name === "input" ? ["1"] : name === "confirm" ? ["1", "2"] : ["1", "2", "3", "4", "5"];
+      on.forEach((n) => $("step-" + n).classList.add("on"));
+    }
+
+    async function readJson(response) {
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const detail = data.detail || data.message || response.statusText;
+        throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+      }
+      return data;
+    }
+
+    async function loadHealth() {
+      try {
+        const health = await readJson(await fetch("/api/health"));
+        $("health").textContent = health.token_configured
+          ? "Treg is connected."
+          : "Paste a Treg token to run a search.";
+        $("token-fields").classList.toggle("hidden", !!health.token_configured);
+      } catch (error) {
+        $("health").textContent = "Could not reach the local server.";
+      }
+    }
+
+    function fillFilters(filters) {
+      $("f-industry").value = filters.industry || "";
+      $("f-q").value = filters.q || "";
+      $("f-technology").value = filters.technology || "";
+      $("f-country").value = filters.country || "";
+      $("f-state").value = filters.state || "";
+      $("f-city").value = filters.city || "";
+      $("f-min").value = filters.employees_min ?? "";
+      $("f-max").value = filters.employees_max ?? "";
+      $("f-limit").value = filters.limit || 100;
+      $("f-title").value = filters.title || "";
+    }
+
+    function readFilters() {
+      const num = (id) => {
+        const value = $(id).value.trim();
+        return value === "" ? null : Number(value);
+      };
+      return {
+        industry: $("f-industry").value.trim(),
+        q: $("f-q").value.trim(),
+        technology: $("f-technology").value.trim(),
+        country: $("f-country").value.trim(),
+        state: $("f-state").value.trim(),
+        city: $("f-city").value.trim(),
+        employees_min: num("f-min"),
+        employees_max: num("f-max"),
+        limit: num("f-limit") || 100,
+        title: $("f-title").value.trim(),
+        parser: "edited"
+      };
+    }
+
+    function readOptions() {
+      return {
+        contacts_per_company: Number($("o-contacts").value || 0),
+        budget_usd: Number($("o-budget").value || 25),
+        max_cost_per_call_usd: Number($("o-max").value || 0.05),
+        concurrency: Number($("o-concurrency").value || 4),
+        verify_emails: $("o-verify").checked,
+        lookup_phones: $("o-phones").checked,
+        waterfall: $("o-waterfall").checked
+      };
+    }
+
+    function estimate() {
+      const options = readOptions();
+      const count = state.mode === "file" ? (state.upload ? state.upload.count : 0) : Number($("f-limit").value || 0);
+      const contacts = Math.min(9, Math.max(0, Number(options.contacts_per_company) || 0));
+      const usual = (count * 0.0028).toFixed(2);
+      const extra = contacts > 0 ? " Contacts are extra." : "";
+      $("estimate").textContent = count
+        ? `Hunter's list is free. A kept company is about $0.0028: Dropleads $0.0018, crawl4ai $0.0005, and an AI read of the description $0.0005. A company near the edge of the employee range also pays for that second count. A company thrown out after Dropleads still costs $0.0018. About $${usual} for ${count.toLocaleString()}. The run stops at $${options.budget_usd}.${extra}`
+        : "";
+    }
+
+    function openConfirm() {
+      show("confirm");
+      estimate();
+    }
+
+    $("parse-btn").addEventListener("click", async () => {
+      $("parse-error").textContent = "";
+      $("parse-btn").disabled = true;
+      try {
+        const filters = await readJson(await fetch("/api/parse", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: $("query").value })
+        }));
+        state.mode = "query";
+        state.filters = filters;
+        $("confirm-title").textContent = "Confirm the search";
+        const how = filters.parser === "llm"
+          ? "Parsed with the language model. Nothing is searched until you click Run."
+          : "Parsed on this machine. Nothing is searched until you click Run.";
+        $("confirm-note").textContent = [how, filters.note].filter(Boolean).join(" ");
+        $("file-summary").classList.add("hidden");
+        $("filter-fields").classList.remove("hidden");
+        fillFilters(filters);
+        openConfirm();
+      } catch (error) {
+        $("parse-error").textContent = error.message;
+      } finally {
+        $("parse-btn").disabled = false;
+      }
+    });
+
+    $("upload-btn").addEventListener("click", async () => {
+      $("upload-error").textContent = "";
+      const file = $("file").files[0];
+      if (!file) {
+        $("upload-error").textContent = "Choose a CSV or Excel file.";
+        return;
+      }
+      $("upload-btn").disabled = true;
+      try {
+        const body = new FormData();
+        body.append("file", file);
+        const uploaded = await readJson(await fetch("/api/uploads", { method: "POST", body }));
+        state.mode = "file";
+        state.upload = uploaded;
+        $("confirm-title").textContent = "Confirm the file";
+        const companyWord = uploaded.count === 1 ? "company" : "companies";
+        const rowWord = uploaded.skipped === 1 ? "row" : "rows";
+        $("confirm-note").textContent = `Using the ${uploaded.column} column. ${uploaded.count} ${companyWord} ready. ${uploaded.skipped} ${rowWord} skipped as blank or duplicate.`;
+        $("filter-fields").classList.add("hidden");
+        const summary = $("file-summary");
+        summary.classList.remove("hidden");
+        const holder = $("file-table");
+        holder.replaceChildren();
+        const table = document.createElement("table");
+        const head = document.createElement("tr");
+        ["Domain", "Company name"].forEach((label) => {
+          const cell = document.createElement("th");
+          cell.textContent = label;
+          head.appendChild(cell);
+        });
+        const thead = document.createElement("thead");
+        thead.appendChild(head);
+        table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        uploaded.sample.forEach((row) => {
+          const tr = document.createElement("tr");
+          [row.domain, row.company_name || ""].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            tr.appendChild(cell);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        holder.appendChild(table);
+        openConfirm();
+      } catch (error) {
+        $("upload-error").textContent = error.message;
+      } finally {
+        $("upload-btn").disabled = false;
+      }
+    });
+
+    ["f-limit", "o-contacts", "o-budget", "o-max", "o-phones"].forEach((id) => {
+      $(id).addEventListener("input", estimate);
+    });
+
+    $("back-btn").addEventListener("click", () => show("input"));
+
+    $("run-btn").addEventListener("click", async () => {
+      $("run-btn").disabled = true;
+      $("run-start-error").textContent = "";
+      try {
+        const payload = {
+          mode: state.mode,
+          upload_id: state.upload ? state.upload.upload_id : "",
+          filters: state.mode === "query" ? readFilters() : { title: $("file-title").value.trim() },
+          options: readOptions(),
+          token: $("token").value.trim(),
+          org: $("org").value.trim()
+        };
+        const job = await readJson(await fetch("/api/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }));
+        if (!job || !job.id) throw new Error("The server did not start the search.");
+        state.jobId = job.id;
+        show("run");
+        renderJob(job);
+        state.timer = setInterval(poll, 1000);
+      } catch (error) {
+        $("confirm-note").textContent = error.message;
+        $("run-start-error").textContent = error.message;
+      } finally {
+        $("run-btn").disabled = false;
+      }
+    });
+
+    function renderJob(job) {
+      const phase = job.phase || job.status;
+      $("run-title").textContent = phase.charAt(0).toUpperCase() + phase.slice(1);
+      $("run-meta").textContent = `${job.done} of ${job.total} companies · ${job.contacts} contacts · ${job.emails} emails · $${Number(job.spent_usd).toFixed(4)} of $${job.budget_usd}`;
+      const width = job.total ? Math.min(100, Math.round((job.done / job.total) * 100)) : (job.status === "done" ? 100 : 8);
+      $("run-bar").style.width = width + "%";
+      $("run-error").textContent = [job.error, job.stop_reason].filter(Boolean).join(" ");
+      $("log").textContent = (job.events || []).join("\n");
+      $("download-btn").disabled = !job.export_ready;
+      $("stop-btn").disabled = job.status !== "running" && job.status !== "queued";
+      const body = $("preview");
+      body.replaceChildren();
+      (job.preview || []).forEach((row) => {
+        const tr = document.createElement("tr");
+        [row.domain, row.name, row.status, row.contacts_found, row.emails_found].forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value ?? "";
+          tr.appendChild(cell);
+        });
+        body.appendChild(tr);
+      });
+      if (job.status === "running" || job.status === "queued") {
+        $("step-5").classList.remove("on");
+      }
+    }
+
+    async function poll() {
+      if (!state.jobId) return;
+      try {
+        const job = await readJson(await fetch("/api/jobs/" + state.jobId));
+        renderJob(job);
+        if (job.status !== "running" && job.status !== "queued") clearInterval(state.timer);
+      } catch (error) {
+        $("run-error").textContent = error.message;
+        clearInterval(state.timer);
+      }
+    }
+
+    $("stop-btn").addEventListener("click", async () => {
+      if (!state.jobId) return;
+      const job = await readJson(await fetch("/api/jobs/" + state.jobId + "/stop", { method: "POST" }));
+      renderJob(job);
+    });
+
+    $("download-btn").addEventListener("click", () => {
+      if (state.jobId) window.location = "/api/jobs/" + state.jobId + "/export";
+    });
+
+    $("again-btn").addEventListener("click", () => {
+      clearInterval(state.timer);
+      state.jobId = "";
+      show("input");
+    });
+
+    loadHealth();
+  </script>
+</body>
+</html>
